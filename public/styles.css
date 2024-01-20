@@ -1,0 +1,60 @@
+.icon {
+    text-align: right;
+}
+ .icon img{
+    height: 100%;
+    width: 50%;
+    margin: 0 50px 0 auto;
+    float: left;
+ }
+
+ .mainWeatherDiv{
+    width: 100%;
+    margin: 10px auto;
+    border: solid 1px grey;
+    padding: 110px;
+    background-repeat: no-repeat;
+    background-size: cover; 
+    background-image: url("/images/background.jpg");
+    color: white
+}
+
+ .mainTemperature{
+    float: left;
+    margin: 80px 12px;
+ }
+
+ /* .searchBar {
+    float: left;
+    width: 45%;
+    margin-left: 20%;
+    margin-top: 100px
+} */
+
+ .searchButton{
+    float: left;
+    /* width: 20%; */
+
+ }
+
+
+
+form input[type=text] {
+    float: left;
+    margin: auto
+
+}
+
+.form-control {
+    width: 350px;
+}
+
+.formDiv{
+    margin: 100px auto 20px auto;
+}
+
+.formDiv form{
+    margin: auto;
+    width: 33%
+}
+
