@@ -18,13 +18,14 @@ function App() {
   const [forecast, setForecast] = useState([]);
   const [currentWeather, setCurrentWeather] = useState();
   const [currentCity, setCurrentCity] = useState("");
+  const [isEnter, setIsEnter] = useState(true);
 
   useEffect(() => {
     const getLocalWeather = async () => {
       let response;
       try {
         response = await axios.get(
-          `http://api.weatherapi.com/v1/current.json?key=${process.env.REACT_APP_WEATHER_API}&q=south%plainfield&aqi=no`
+          `http://api.weatherapi.com/v1/current.json?key=6ec155e4e18f4c1999d190710242101&q=south%plainfield&aqi=no`
         );
         setLocation(response.data.location);
         setCurrentWeather(response.data.current);
@@ -50,14 +51,17 @@ function App() {
     //     setForecast(response.data.list);
     //   });
 
+    setIsEnter((v) => !v);
+
     const weatherNow = await axios
       .post(
-        `http://api.weatherapi.com/v1/current.json?key=${process.env.REACT_APP_WEATHER_API}&q=${cityName}&aqi=no`
+        `http://api.weatherapi.com/v1/current.json?key=6ec155e4e18f4c1999d190710242101&q=${cityName}&aqi=no`
       )
 
       .then((res) => {
         setLocation(res.data.location);
         setCurrentWeather(res.data.current);
+        setIsEnter((v) => !v);
       });
   };
 
@@ -84,6 +88,7 @@ function App() {
       <WeatherHero
         location={location}
         currentWeather={currentWeather}
+        isEnter={isEnter}
         // temperature={temperature}
         // currentCity={currentCity}
         // country={country}
