@@ -26,7 +26,7 @@ function App() {
       let response;
       try {
         response = await axios.get(
-          `http://api.weatherapi.com/v1/current.json?key=${process.env.REACT_APP_WEATHER_API_KEY}&q=south%plainfield&aqi=no`
+          `https://api.weatherapi.com/v1/current.json?key=${process.env.REACT_APP_WEATHER_API_KEY}&q=south%plainfield&aqi=no`
         );
         setLocation(response.data.location);
         setCurrentWeather(response.data.current);
@@ -56,7 +56,7 @@ function App() {
 
     const weatherNow = await axios
       .post(
-        `http://api.weatherapi.com/v1/current.json?key=${process.env.REACT_APP_WEATHER_API_KEY}&q=${cityName}&aqi=no`
+        `https://api.weatherapi.com/v1/current.json?key=${process.env.REACT_APP_WEATHER_API_KEY}&q=${cityName}&aqi=no`
       )
 
       .then((res) => {
