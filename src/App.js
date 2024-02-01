@@ -1,69 +1,54 @@
 import React, { useState, useEffect } from "react";
-import SearchBar from "./components/SearchBar";
 import WeatherHero from "./components/WeatherHero";
 import ForecastDayCard from "./components/ForecastDayCard";
-import axios from "axios";
+import {
+  currentLocationWeather,
+  weatherSearch,
+  getforecast,
+} from "./apiCalls.js/getWeather";
+import { CSSTransition } from "react-transition-group";
 
 function App() {
   const [cityName, setCityName] = useState("");
-  const [region, setRegion] = useState("NJ");
-  const [country, setCountry] = useState("United States");
-  const [temperature, setTemperature] = useState(25);
-  const [weatherDescription, setWeatherDescription] = useState("ICY ASL");
-  const [iconImg, setIconImg] = useState(
-    "//cdn.weatherapi.com/weather/64x64/night/113.png"
-  );
-
-  const [location, setLocation] = useState();
+  const [location, setLocation] = useState(undefined);
   const [forecast, setForecast] = useState([]);
   const [currentWeather, setCurrentWeather] = useState();
-  const [currentCity, setCurrentCity] = useState("");
   const [isEnter, setIsEnter] = useState(true);
-  console.log(process.env.REACT_APP_WEATHER_API);
+  // const [hourly, setHourly] = useState([]);
 
   useEffect(() => {
-    const getLocalWeather = async () => {
-      let response;
-      try {
-        response = await axios.get(
-          `https://api.weatherapi.com/v1/current.json?key=${process.env.REACT_APP_WEATHER_API_KEY}&q=south%plainfield&aqi=no`
-        );
-        setLocation(response.data.location);
-        setCurrentWeather(response.data.current);
-        console.log(response);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+    currentLocationWeather().then((res) => {
+      console.log(res);
+      setLocation(res.location);
+      setCurrentWeather(res.current);
+    });
 
-    getLocalWeather();
+    getforecast("south plainfield").then((res) => {
+      console.log(res);
+      let hourly = res.forecast.forecastday[0].hour;
+      let response = [hourly[0], hourly[3], hourly[6], hourly[9]];
+      setForecast(response);
+    });
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // const response = await axios
-    //   .post(
-    //     `https://api.openweathermap.org/data/2.5/forecast?q=south%plainfield&appid=${process.env.REACT_APP_WEATHER_API}`
-    //   )
-    //   .then((response) => {
-    //     console.log(response);
-    //     setCurrentCity(response.data.city.name);
-    //     setForecast(response.data.list);
-    //   });
-
     setIsEnter((v) => !v);
 
-    const weatherNow = await axios
-      .post(
-        `https://api.weatherapi.com/v1/current.json?key=${process.env.REACT_APP_WEATHER_API_KEY}&q=${cityName}&aqi=no`
-      )
+    weatherSearch(cityName).then((res) => {
+      console.log(res);
+      setLocation(res.location);
+      setCurrentWeather(res.current);
+      setIsEnter((v) => !v);
+    });
 
-      .then((res) => {
-        setLocation(res.data.location);
-        setCurrentWeather(res.data.current);
-        setIsEnter((v) => !v);
-      });
+    getforecast(cityName).then((res) => {
+      console.log(res);
+      let hourly = res.forecast.forecastday[0].hour;
+      let response = [hourly[0], hourly[3], hourly[6], hourly[9]];
+      setForecast(response);
+    });
   };
 
   return (
@@ -85,18 +70,30 @@ function App() {
           </div>
         </form>
       </div>
-
-      <WeatherHero
-        location={location}
-        currentWeather={currentWeather}
-        isEnter={isEnter}
-        // temperature={temperature}
-        // currentCity={currentCity}
-        // country={country}
-        // weatherDescription={weatherDescription}
-        // iconImg={iconImg}
-      />
-      <ForecastDayCard />
+      <div className="row container mainWeatherDiv">
+        <CSSTransition
+          in={isEnter}
+          timeout={3000}
+          appear={true}
+          classNames="myClass"
+          // nodeRef={nodeRef}
+        >
+          <WeatherHero
+            location={location}
+            currentWeather={currentWeather}
+            isEnter={isEnter}
+          />
+        </CSSTransition>
+        <CSSTransition
+          in={isEnter}
+          timeout={3000}
+          appear={true}
+          classNames="myClass"
+          // nodeRef={nodeRef}
+        >
+          <ForecastDayCard forecast={forecast} />
+        </CSSTransition>
+      </div>
     </div>
   );
 }
